@@ -59,6 +59,12 @@
             resize: vertical;
         }
         
+        /* Centered Button */
+        .button-container {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
         button {
             background-color: #2c3e50;
             color: #ffffff;
@@ -67,7 +73,6 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            margin-top: 1rem;
         }
         
         button:hover {
@@ -278,34 +283,6 @@
             </select>
         </div>
         
-        <!-- Artist Inspiration -->
-        <div class="form-group">
-            <label for="artist">Inspired by Artist (Optional):</label>
-            <select id="artist">
-                <option value="">None</option>
-                <option value="Leonardo da Vinci">Leonardo da Vinci</option>
-                <option value="Michelangelo">Michelangelo</option>
-                <option value="Vincent van Gogh">Vincent van Gogh</option>
-                <option value="Pablo Picasso">Pablo Picasso</option>
-                <option value="Rembrandt">Rembrandt</option>
-                <option value="Claude Monet">Claude Monet</option>
-                <option value="Salvador Dalí">Salvador Dalí</option>
-                <option value="Frida Kahlo">Frida Kahlo</option>
-                <option value="Georgia O'Keeffe">Georgia O'Keeffe</option>
-                <option value="Edgar Degas">Edgar Degas</option>
-                <option value="Paul Cézanne">Paul Cézanne</option>
-                <option value="Andy Warhol">Andy Warhol</option>
-                <option value="Henri Matisse">Henri Matisse</option>
-                <option value="Jackson Pollock">Jackson Pollock</option>
-                <option value="Edvard Munch">Edvard Munch</option>
-                <option value="Johannes Vermeer">Johannes Vermeer</option>
-                <option value="Caravaggio">Caravaggio</option>
-                <option value="Gustav Klimt">Gustav Klimt</option>
-                <option value="Pierre-Auguste Renoir">Pierre-Auguste Renoir</option>
-                <option value="Jan van Eyck">Jan van Eyck</option>
-            </select>
-        </div>
-        
         <!-- Seed Number -->
         <div class="form-group">
             <label for="seed">Seed Number (Optional for consistent outputs):</label>
@@ -313,7 +290,9 @@
         </div>
         
         <!-- Generate Button -->
-        <button type="submit">Generate Art</button>
+        <div class="button-container">
+            <button type="submit">Generate Art</button>
+        </div>
     </form>
     
     <!-- Output Section -->
@@ -373,7 +352,6 @@
         const additionalElements = document.getElementById('additional-elements').value;
         const artStyle = document.getElementById('art-style').value;
         const medium = document.getElementById('medium').value;
-        const artist = document.getElementById('artist').value;
         const seedInput = document.getElementById('seed').value;
         const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
         
@@ -383,10 +361,7 @@
             prompt += `, ${additionalElements}`;
         }
         prompt += `, in the style of ${artStyle}, ${medium}`;
-        if (artist) {
-            prompt += `, inspired by ${artist}`;
-        }
-        prompt += `, a highly detailed and professional painting that will hang on the wall`;
+        prompt += `, a highly detailed and professional painting`;
         const encodedPrompt = encodeURIComponent(prompt);
         
         // Display the full prompt with seed number
@@ -423,11 +398,7 @@
                 if (additionalElements.trim() !== '') {
                     caption += `, ${additionalElements}`;
                 }
-                caption += `, in ${artStyle} style`;
-                if (artist) {
-                    caption += ` inspired by ${artist}`;
-                }
-                caption += `.`;
+                caption += `, in ${artStyle} style.`;
                 document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
                 
                 // Generate QR code linking to the image on Pollinations.ai
