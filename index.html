@@ -1,1 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oak Tree Art Generator</title>
+    <meta name="description" content="AI-powered Oak Tree art generator for Oak Hall School AI Club">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Fonts for styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Internal CSS -->
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: #1a252f;
+        }
+        
+        .output {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .output img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        
+        .caption {
+            margin-top: 1rem;
+            font-style: italic;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #27ae60;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        
+        .download-btn:hover {
+            background-color: #1e8449;
+        }
+        
+        .prompt-display {
+            background-color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-family: monospace;
+            text-align: left;
+        }
+        
+        .loader {
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Oak Tree Art Generator</h1>
+    <h2>Oak Hall School AI Club</h2>
+    <form id="art-form">
+        <!-- Student Name -->
+        <div class="form-group">
+            <label for="student-name">Student Name:</label>
+            <input type="text" id="student-name" required>
+        </div>
+        
+        <!-- Grade -->
+        <div class="form-group">
+            <label for="grade">Grade (4-8):</label>
+            <input type="number" id="grade" min="4" max="8" required>
+        </div>
+        
+        <!-- Oak Tree Type -->
+        <div class="form-group">
+            <label for="oak-type">Type of Oak Tree:</label>
+            <select id="oak-type">
+                <option value="mighty oak tree">Mighty Oak Tree</option>
+                <option value="ancient oak tree">Ancient Oak Tree</option>
+                <option value="young oak sapling">Young Oak Sapling</option>
+                <option value="oak tree in autumn">Oak Tree in Autumn</option>
+                <option value="oak tree by the lake">Oak Tree by the Lake</option>
+                <option value="oak tree on a hill">Oak Tree on a Hill</option>
+            </select>
+        </div>
+        
+        <!-- Art Style -->
+        <div class="form-group">
+            <label for="art-style">Art Style:</label>
+            <select id="art-style">
+                <option value="Impressionism">Impressionism</option>
+                <option value="Cubism">Cubism</option>
+                <option value="Surrealism">Surrealism</option>
+                <option value="Renaissance">Renaissance</option>
+                <option value="Abstract">Abstract</option>
+                <option value="Modern">Modern</option>
+            </select>
+        </div>
+        
+        <!-- Medium -->
+        <div class="form-group">
+            <label for="medium">Medium:</label>
+            <select id="medium">
+                <option value="oil painting on canvas">Oil Painting on Canvas</option>
+                <option value="watercolor on paper">Watercolor on Paper</option>
+                <option value="digital art">Digital Art</option>
+                <option value="charcoal sketch">Charcoal Sketch</option>
+                <option value="acrylic painting">Acrylic Painting</option>
+            </select>
+        </div>
+        
+        <!-- Artist Inspiration -->
+        <div class="form-group">
+            <label for="artist">Inspired by Artist:</label>
+            <select id="artist">
+                <option value="Vincent van Gogh">Vincent van Gogh</option>
+                <option value="Pablo Picasso">Pablo Picasso</option>
+                <option value="Claude Monet">Claude Monet</option>
+                <option value="Salvador Dalí">Salvador Dalí</option>
+                <option value="Georgia O'Keeffe">Georgia O'Keeffe</option>
+                <option value="Leonardo da Vinci">Leonardo da Vinci</option>
+            </select>
+        </div>
+        
+        <!-- Seed Number -->
+        <div class="form-group">
+            <label for="seed">Seed Number (Optional for consistent outputs):</label>
+            <input type="number" id="seed">
+        </div>
+        
+        <!-- Generate Button -->
+        <button type="submit">Generate Art</button>
+    </form>
+    
+    <!-- Output Section -->
+    <div class="output" id="output-section" style="display: none;">
+        <h2>Your AI-Generated Art</h2>
+        <div class="loader" id="loader">Generating your art, please wait...</div>
+        <img id="generated-image" src="" alt="AI-Generated Art">
+        <p class="caption" id="art-caption"></p>
+        <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
+        <div class="prompt-display" id="prompt-display"></div>
+    </div>
+</div>
+
+<!-- JavaScript Code -->
+<script>
+    document.getElementById('art-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Show the output section and loader
+        document.getElementById('output-section').style.display = 'block';
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('generated-image').style.display = 'none';
+        document.getElementById('download-btn').style.display = 'none';
+        document.getElementById('art-caption').textContent = '';
+        document.getElementById('prompt-display').textContent = '';
+        
+        // Get form values
+        const studentName = document.getElementById('student-name').value;
+        const grade = document.getElementById('grade').value;
+        const oakType = document.getElementById('oak-type').value;
+        const artStyle = document.getElementById('art-style').value;
+        const medium = document.getElementById('medium').value;
+        const artist = document.getElementById('artist').value;
+        const seedInput = document.getElementById('seed').value;
+        const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
+        
+        // Construct the prompt
+        const prompt = `${oakType}, in the style of ${artStyle}, ${medium}, inspired by ${artist}, highly detailed, professional, art that would hang on a wall`;
+        const encodedPrompt = encodeURIComponent(prompt);
+        
+        // Display the full prompt
+        document.getElementById('prompt-display').textContent = `Prompt: ${prompt}`;
+        
+        // Create the image URL
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512`;
+        
+        // Fetch the image
+        fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const imageObjectURL = URL.createObjectURL(blob);
+                
+                // Display the image
+                const imgElement = document.getElementById('generated-image');
+                imgElement.src = imageObjectURL;
+                imgElement.style.display = 'block';
+                
+                // Hide the loader
+                document.getElementById('loader').style.display = 'none';
+                
+                // Update the download link
+                const downloadLink = document.getElementById('download-btn');
+                downloadLink.href = imageObjectURL;
+                downloadLink.style.display = 'inline-block';
+                
+                // Create the caption
+                const caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, in ${artStyle} style inspired by ${artist}.`;
+                document.getElementById('art-caption').textContent = caption;
+            })
+            .catch(error => {
+                console.error('Error generating image:', error);
+                document.getElementById('loader').textContent = 'An error occurred. Please try again.';
+            });
+    });
+</script>
+
+</body>
+</html>
 
