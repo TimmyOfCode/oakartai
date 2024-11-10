@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Oak Tree Art Generator</title>
-    <meta name="description" content="AI-powered Oak Tree art generator for Oak Hall School AI Club">
+    <meta name="description" content="AI-powered Oak Tree art generator for Oak Hall School AI Prompt Engineering Enrichment Program">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Fonts for styling -->
@@ -44,11 +44,15 @@
             margin-bottom: 0.5rem;
         }
         
-        select, input[type="text"], input[type="number"] {
+        select, input[type="text"], input[type="number"], textarea {
             width: 100%;
             padding: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
         }
         
         button {
@@ -104,11 +108,22 @@
             margin-top: 1rem;
             font-family: monospace;
             text-align: left;
+            word-wrap: break-word;
         }
         
         .loader {
             margin-top: 1rem;
             display: none;
+        }
+        
+        .qr-code {
+            margin-top: 1rem;
+        }
+        
+        .centered-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
@@ -116,7 +131,7 @@
 
 <div class="container">
     <h1>Oak Tree Art Generator</h1>
-    <h2>Oak Hall School AI Club</h2>
+    <h2>Oak Hall School AI Prompt Engineering Enrichment Program</h2>
     <form id="art-form">
         <!-- Student Name -->
         <div class="form-group">
@@ -143,6 +158,38 @@
             </select>
         </div>
         
+        <!-- Lighting -->
+        <div class="form-group">
+            <label for="lighting">Lighting:</label>
+            <select id="lighting">
+                <option value="bathed in golden sunlight">Bathed in Golden Sunlight</option>
+                <option value="under a twilight sky">Under a Twilight Sky</option>
+                <option value="in a misty morning">In a Misty Morning</option>
+                <option value="illuminated by moonlight">Illuminated by Moonlight</option>
+                <option value="during sunset">During Sunset</option>
+                <option value="with dramatic shadows">With Dramatic Shadows</option>
+            </select>
+        </div>
+        
+        <!-- Composition and Perspective -->
+        <div class="form-group">
+            <label for="composition">Composition and Perspective:</label>
+            <select id="composition">
+                <option value="framed using the rule of thirds">Using the Rule of Thirds</option>
+                <option value="from a low-angle perspective">From a Low-Angle Perspective</option>
+                <option value="from a bird's-eye view">From a Bird's-Eye View</option>
+                <option value="with a close-up focus on the trunk">Close-Up Focus on the Trunk</option>
+                <option value="with a wide-angle lens effect">With a Wide-Angle Lens Effect</option>
+                <option value="symmetrical composition">Symmetrical Composition</option>
+            </select>
+        </div>
+        
+        <!-- Additional Elements -->
+        <div class="form-group">
+            <label for="additional-elements">Additional Elements (Optional):</label>
+            <textarea id="additional-elements" rows="3" placeholder="E.g., with leaves gently falling, surrounded by a serene landscape"></textarea>
+        </div>
+        
         <!-- Art Style -->
         <div class="form-group">
             <label for="art-style">Art Style:</label>
@@ -153,6 +200,7 @@
                 <option value="Renaissance">Renaissance</option>
                 <option value="Abstract">Abstract</option>
                 <option value="Modern">Modern</option>
+                <option value="Pop Art">Pop Art</option>
             </select>
         </div>
         
@@ -170,14 +218,29 @@
         
         <!-- Artist Inspiration -->
         <div class="form-group">
-            <label for="artist">Inspired by Artist:</label>
+            <label for="artist">Inspired by Artist (Optional):</label>
             <select id="artist">
+                <option value="">None</option>
+                <option value="Leonardo da Vinci">Leonardo da Vinci</option>
+                <option value="Michelangelo">Michelangelo</option>
                 <option value="Vincent van Gogh">Vincent van Gogh</option>
                 <option value="Pablo Picasso">Pablo Picasso</option>
+                <option value="Rembrandt">Rembrandt</option>
                 <option value="Claude Monet">Claude Monet</option>
                 <option value="Salvador Dalí">Salvador Dalí</option>
+                <option value="Frida Kahlo">Frida Kahlo</option>
                 <option value="Georgia O'Keeffe">Georgia O'Keeffe</option>
-                <option value="Leonardo da Vinci">Leonardo da Vinci</option>
+                <option value="Edgar Degas">Edgar Degas</option>
+                <option value="Paul Cézanne">Paul Cézanne</option>
+                <option value="Andy Warhol">Andy Warhol</option>
+                <option value="Henri Matisse">Henri Matisse</option>
+                <option value="Jackson Pollock">Jackson Pollock</option>
+                <option value="Edvard Munch">Edvard Munch</option>
+                <option value="Johannes Vermeer">Johannes Vermeer</option>
+                <option value="Caravaggio">Caravaggio</option>
+                <option value="Gustav Klimt">Gustav Klimt</option>
+                <option value="Pierre-Auguste Renoir">Pierre-Auguste Renoir</option>
+                <option value="Jan van Eyck">Jan van Eyck</option>
             </select>
         </div>
         
@@ -195,8 +258,11 @@
     <div class="output" id="output-section" style="display: none;">
         <h2>Your AI-Generated Art</h2>
         <div class="loader" id="loader">Generating your art, please wait...</div>
-        <img id="generated-image" src="" alt="AI-Generated Art">
+        <div class="centered-image">
+            <img id="generated-image" src="" alt="AI-Generated Art" style="display: none;">
+        </div>
         <p class="caption" id="art-caption"></p>
+        <div class="qr-code" id="qr-code"></div>
         <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
         <div class="prompt-display" id="prompt-display"></div>
     </div>
@@ -214,11 +280,15 @@
         document.getElementById('download-btn').style.display = 'none';
         document.getElementById('art-caption').textContent = '';
         document.getElementById('prompt-display').textContent = '';
+        document.getElementById('qr-code').innerHTML = '';
         
         // Get form values
         const studentName = document.getElementById('student-name').value;
         const grade = document.getElementById('grade').value;
         const oakType = document.getElementById('oak-type').value;
+        const lighting = document.getElementById('lighting').value;
+        const composition = document.getElementById('composition').value;
+        const additionalElements = document.getElementById('additional-elements').value;
         const artStyle = document.getElementById('art-style').value;
         const medium = document.getElementById('medium').value;
         const artist = document.getElementById('artist').value;
@@ -226,7 +296,15 @@
         const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
         
         // Construct the prompt
-        const prompt = `${oakType}, in the style of ${artStyle}, ${medium}, inspired by ${artist}, highly detailed, professional, art that would hang on a wall`;
+        let prompt = `${oakType}, ${lighting}, ${composition}`;
+        if (additionalElements.trim() !== '') {
+            prompt += `, ${additionalElements}`;
+        }
+        prompt += `, in the style of ${artStyle}, ${medium}`;
+        if (artist) {
+            prompt += `, inspired by ${artist}`;
+        }
+        prompt += `, highly detailed, professional, art that would hang on a wall`;
         const encodedPrompt = encodeURIComponent(prompt);
         
         // Display the full prompt
@@ -255,8 +333,24 @@
                 downloadLink.style.display = 'inline-block';
                 
                 // Create the caption
-                const caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, in ${artStyle} style inspired by ${artist}.`;
+                let caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}`;
+                if (additionalElements.trim() !== '') {
+                    caption += `, ${additionalElements}`;
+                }
+                caption += `, in ${artStyle} style`;
+                if (artist) {
+                    caption += ` inspired by ${artist}`;
+                }
+                caption += `.`;
                 document.getElementById('art-caption').textContent = caption;
+                
+                // Generate QR code linking to the image on Pollinations.ai
+                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512`;
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pollinationsLink)}`;
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = qrCodeUrl;
+                qrCodeImg.alt = 'QR Code';
+                document.getElementById('qr-code').appendChild(qrCodeImg);
             })
             .catch(error => {
                 console.error('Error generating image:', error);
@@ -267,4 +361,3 @@
 
 </body>
 </html>
-
