@@ -36,16 +36,20 @@
         
         .form-group {
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
         }
         
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+        .form-group label {
+            width: 220px;
+            margin-bottom: 0;
         }
         
-        select, input[type="text"], input[type="number"], textarea {
-            width: 100%;
+        .form-group select, 
+        .form-group input[type="text"], 
+        .form-group input[type="number"], 
+        .form-group textarea {
+            flex: 1;
             padding: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -201,6 +205,21 @@
             </select>
         </div>
         
+        <!-- Brushwork -->
+        <div class="form-group">
+            <label for="brushwork">Brushwork:</label>
+            <select id="brushwork">
+                <option value="smooth brushwork">Smooth Brushwork</option>
+                <option value="expressive brushwork">Expressive Brushwork</option>
+                <option value="impasto brushwork">Impasto Brushwork</option>
+                <option value="dry brush technique">Dry Brush Technique</option>
+                <option value="broken brushwork">Broken Brushwork</option>
+                <option value="scumbling">Scumbling</option>
+                <option value="glazing">Glazing</option>
+                <option value="sgraffito">Sgraffito</option>
+            </select>
+        </div>
+        
         <!-- Additional Elements -->
         <div class="form-group">
             <label for="additional-elements">Additional Elements (Optional):</label>
@@ -316,6 +335,7 @@
         const oakType = document.getElementById('oak-type').value;
         const lighting = document.getElementById('lighting').value;
         const composition = document.getElementById('composition').value;
+        const brushwork = document.getElementById('brushwork').value;
         const additionalElements = document.getElementById('additional-elements').value;
         const artStyle = document.getElementById('art-style').value;
         const medium = document.getElementById('medium').value;
@@ -324,7 +344,7 @@
         const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
         
         // Construct the prompt
-        let prompt = `${oakType}, ${lighting}, ${composition}`;
+        let prompt = `${oakType}, ${lighting}, ${composition}, ${brushwork}`;
         if (additionalElements.trim() !== '') {
             prompt += `, ${additionalElements}`;
         }
@@ -332,14 +352,14 @@
         if (artist) {
             prompt += `, inspired by ${artist}`;
         }
-        prompt += `, highly detailed, professional, art that would hang on a wall`;
+        prompt += `, highly detailed, professional, painting that would hang on a wall`;
         const encodedPrompt = encodeURIComponent(prompt);
         
         // Display the full prompt
         document.getElementById('prompt-display').textContent = `Prompt: ${prompt}`;
         
-        // Create the image URL with higher resolution (2400x2400 pixels)
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400`;
+        // Create the image URL with higher resolution (2400x2400 pixels) and no logo
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400&nologo=true`;
         
         // Fetch the image
         fetch(imageUrl)
@@ -364,7 +384,7 @@
                 document.getElementById('download-pdf-btn').style.display = 'inline-block';
                 
                 // Create the caption
-                let caption = `AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}`;
+                let caption = `AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}, ${brushwork}`;
                 if (additionalElements.trim() !== '') {
                     caption += `, ${additionalElements}`;
                 }
@@ -376,7 +396,7 @@
                 document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
                 
                 // Generate QR code linking to the image on Pollinations.ai
-                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400`;
+                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400&nologo=true`;
                 const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pollinationsLink)}`;
                 const qrCodeImg = document.createElement('img');
                 qrCodeImg.src = qrCodeUrl;
