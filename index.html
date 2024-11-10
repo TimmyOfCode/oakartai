@@ -251,36 +251,36 @@
             </select>
         </div>
         
-        <!-- Additional Elements -->
-        <div class="form-group">
-            <label for="additional-elements">Additional Elements (Optional):</label>
-            <textarea id="additional-elements" rows="3" placeholder="E.g., with leaves gently falling, surrounded by a serene landscape"></textarea>
-        </div>
-        
-        <!-- Art Style -->
-        <div class="form-group">
-            <label for="art-style">Art Style:</label>
-            <select id="art-style">
-                <option value="Impressionism">Impressionism</option>
-                <option value="Cubism">Cubism</option>
-                <option value="Surrealism">Surrealism</option>
-                <option value="Renaissance">Renaissance</option>
-                <option value="Abstract">Abstract</option>
-                <option value="Modern">Modern</option>
-                <option value="Pop Art">Pop Art</option>
-            </select>
-        </div>
-        
         <!-- Medium -->
         <div class="form-group">
             <label for="medium">Medium:</label>
             <select id="medium">
                 <option value="oil painting on canvas">Oil Painting on Canvas</option>
                 <option value="watercolor on paper">Watercolor on Paper</option>
-                <option value="digital art">Digital Art</option>
+                <option value="sketch on heavy weight paper">Sketch on Heavy-weight Paper</option>
                 <option value="charcoal sketch">Charcoal Sketch</option>
                 <option value="acrylic painting">Acrylic Painting</option>
             </select>
+        </div>
+        
+        <!-- Dominant Color -->
+        <div class="form-group">
+            <label for="dominant-color">Dominant Color (Optional):</label>
+            <select id="dominant-color">
+                <option value="">None</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="orange">Orange</option>
+                <option value="purple">Purple</option>
+            </select>
+        </div>
+        
+        <!-- Additional Elements -->
+        <div class="form-group">
+            <label for="additional-elements">Additional Elements (Optional):</label>
+            <textarea id="additional-elements" rows="3" placeholder="E.g., with leaves gently falling, surrounded by a serene landscape"></textarea>
         </div>
         
         <!-- Seed Number -->
@@ -349,18 +349,20 @@
         const lighting = document.getElementById('lighting').value;
         const composition = document.getElementById('composition').value;
         const brushwork = document.getElementById('brushwork').value;
-        const additionalElements = document.getElementById('additional-elements').value;
-        const artStyle = document.getElementById('art-style').value;
         const medium = document.getElementById('medium').value;
+        const dominantColor = document.getElementById('dominant-color').value;
+        const additionalElements = document.getElementById('additional-elements').value;
         const seedInput = document.getElementById('seed').value;
         const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
         
         // Construct the prompt
-        let prompt = `${oakType}, ${lighting}, ${composition}, ${brushwork}`;
+        let prompt = `${oakType}, ${lighting}, ${composition}, ${brushwork}, ${medium}`;
+        if (dominantColor) {
+            prompt += `, dominant color is ${dominantColor}`;
+        }
         if (additionalElements.trim() !== '') {
             prompt += `, ${additionalElements}`;
         }
-        prompt += `, in the style of ${artStyle}, ${medium}`;
         prompt += `, a highly detailed and professional painting`;
         const encodedPrompt = encodeURIComponent(prompt);
         
@@ -395,10 +397,13 @@
                 
                 // Create the caption
                 let caption = `AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}, ${brushwork}`;
+                if (dominantColor) {
+                    caption += `, dominant color is ${dominantColor}`;
+                }
                 if (additionalElements.trim() !== '') {
                     caption += `, ${additionalElements}`;
                 }
-                caption += `, in ${artStyle} style.`;
+                caption += `.`;
                 document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
                 
                 // Generate QR code linking to the image on Pollinations.ai
