@@ -119,6 +119,7 @@
         .loader {
             margin-top: 1rem;
             display: none;
+            text-align: center;
         }
         
         .qr-code {
@@ -146,6 +147,30 @@
 
         .button-group a:last-child, .button-group button:last-child {
             margin-right: 0;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 1rem;
+            height: 20px;
+            display: none;
+        }
+
+        .progress-bar .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #27ae60;
+            animation: progress-animation 2s infinite;
+        }
+
+        @keyframes progress-animation {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 0%; }
         }
     </style>
 </head>
@@ -294,7 +319,12 @@
     <!-- Output Section -->
     <div class="output" id="output-section" style="display: none;">
         <h2>Your AI-Generated Art</h2>
-        <div class="loader" id="loader">Generating your art, please wait...</div>
+        <div class="loader" id="loader">
+            <p>Generating your art, please wait...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
         <div class="centered-image">
             <img id="generated-image" src="" alt="AI-Generated Art" style="display: none;">
         </div>
@@ -329,6 +359,9 @@
         document.getElementById('art-caption').textContent = '';
         document.getElementById('prompt-display').textContent = '';
         document.getElementById('qr-code').innerHTML = '';
+        
+        // Show the progress bar
+        document.querySelector('.progress-bar').style.display = 'block';
         
         // Get form values
         const studentName = document.getElementById('student-name').value;
@@ -373,8 +406,9 @@
                 imgElement.src = imageObjectURL;
                 imgElement.style.display = 'block';
                 
-                // Hide the loader
+                // Hide the loader and progress bar
                 document.getElementById('loader').style.display = 'none';
+                document.querySelector('.progress-bar').style.display = 'none';
                 
                 // Update the download link
                 const downloadLink = document.getElementById('download-btn');
@@ -418,6 +452,7 @@
             .catch(error => {
                 console.error('Error generating image:', error);
                 document.getElementById('loader').textContent = 'An error occurred. Please try again.';
+                document.querySelector('.progress-bar').style.display = 'none';
             });
     });
     
