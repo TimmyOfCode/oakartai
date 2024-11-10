@@ -64,7 +64,6 @@
             cursor: pointer;
             font-size: 1rem;
             margin-top: 1rem;
-            width: 100%;
         }
         
         button:hover {
@@ -95,6 +94,7 @@
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
+            margin-right: 1rem;
         }
         
         .download-btn:hover {
@@ -126,13 +126,21 @@
             align-items: center;
         }
 
-        /* Add styles for the new button */
+        /* Button Group */
         .button-group {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
+            flex-wrap: wrap;
             margin-top: 1rem;
+        }
+
+        .button-group a, .button-group button {
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-group a:last-child, .button-group button:last-child {
+            margin-right: 0;
         }
     </style>
 </head>
@@ -356,7 +364,7 @@
                 document.getElementById('download-pdf-btn').style.display = 'inline-block';
                 
                 // Create the caption
-                let caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}`;
+                let caption = `AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}`;
                 if (additionalElements.trim() !== '') {
                     caption += `, ${additionalElements}`;
                 }
@@ -365,7 +373,7 @@
                     caption += ` inspired by ${artist}`;
                 }
                 caption += `.`;
-                document.getElementById('art-caption').textContent = caption;
+                document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
                 
                 // Generate QR code linking to the image on Pollinations.ai
                 const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400`;
@@ -434,10 +442,11 @@
         // Add the caption
         doc.setFontSize(12);
         doc.setFont('Helvetica', 'normal');
-        doc.text(doc.splitTextToSize(generatePDFData.caption, 7.5), 0.5, 10);
+        const captionLines = doc.splitTextToSize(generatePDFData.caption, 5.5);
+        doc.text(captionLines, 0.5, 10);
         
         // Add the QR code
-        doc.addImage(generatePDFData.qrCodeUrl, 'PNG', 7, 9, 1.5, 1.5);
+        doc.addImage(generatePDFData.qrCodeUrl, 'PNG', 6.5, 9, 1.5, 1.5);
         
         // Save the PDF
         doc.save(`${generatePDFData.studentName}_Artwork.pdf`);
