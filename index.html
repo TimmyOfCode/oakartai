@@ -125,6 +125,15 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* Add styles for the new button */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -263,10 +272,20 @@
         </div>
         <p class="caption" id="art-caption"></p>
         <div class="qr-code" id="qr-code"></div>
-        <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
+        
+        <!-- Button Group -->
+        <div class="button-group">
+            <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
+            <button id="download-pdf-btn" class="download-btn">Download Gallery PDF</button>
+        </div>
+        
         <div class="prompt-display" id="prompt-display"></div>
     </div>
 </div>
+
+<!-- Include jsPDF and html2canvas libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <!-- JavaScript Code -->
 <script>
@@ -278,6 +297,7 @@
         document.getElementById('loader').style.display = 'block';
         document.getElementById('generated-image').style.display = 'none';
         document.getElementById('download-btn').style.display = 'none';
+        document.getElementById('download-pdf-btn').style.display = 'none';
         document.getElementById('art-caption').textContent = '';
         document.getElementById('prompt-display').textContent = '';
         document.getElementById('qr-code').innerHTML = '';
@@ -310,8 +330,8 @@
         // Display the full prompt
         document.getElementById('prompt-display').textContent = `Prompt: ${prompt}`;
         
-        // Create the image URL
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512`;
+        // Create the image URL with higher resolution (2400x2400 pixels)
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400`;
         
         // Fetch the image
         fetch(imageUrl)
@@ -332,6 +352,9 @@
                 downloadLink.href = imageObjectURL;
                 downloadLink.style.display = 'inline-block';
                 
+                // Show the PDF download button
+                document.getElementById('download-pdf-btn').style.display = 'inline-block';
+                
                 // Create the caption
                 let caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}`;
                 if (additionalElements.trim() !== '') {
@@ -345,17 +368,79 @@
                 document.getElementById('art-caption').textContent = caption;
                 
                 // Generate QR code linking to the image on Pollinations.ai
-                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512`;
+                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400`;
                 const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pollinationsLink)}`;
                 const qrCodeImg = document.createElement('img');
                 qrCodeImg.src = qrCodeUrl;
                 qrCodeImg.alt = 'QR Code';
                 document.getElementById('qr-code').appendChild(qrCodeImg);
+                
+                // Store data for PDF generation
+                imgElement.onload = function() {
+                    generatePDFData = {
+                        image: imgElement,
+                        studentName: studentName,
+                        grade: grade,
+                        caption: caption,
+                        qrCodeUrl: qrCodeUrl
+                    };
+                };
             })
             .catch(error => {
                 console.error('Error generating image:', error);
                 document.getElementById('loader').textContent = 'An error occurred. Please try again.';
             });
+    });
+    
+    // PDF Generation Functionality
+    let generatePDFData = null;
+    
+    document.getElementById('download-pdf-btn').addEventListener('click', function() {
+        if (!generatePDFData) {
+            alert('Please generate an image first.');
+            return;
+        }
+        
+        // Create a new jsPDF instance
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'in',
+            format: [8.5, 11],
+            compress: true
+        });
+        
+        // Set background color to black
+        doc.setFillColor(0, 0, 0);
+        doc.rect(0, 0, 8.5, 11, 'F');
+        
+        // Add the image
+        const imgData = generatePDFData.image.src;
+        const imgWidth = 8; // 8 inches
+        const imgHeight = 8; // 8 inches
+        doc.addImage(imgData, 'JPEG', 0.25, 0.5, imgWidth, imgHeight);
+        
+        // Add the student's name
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont('Helvetica', 'bold');
+        doc.text(generatePDFData.studentName, 0.5, 9);
+        
+        // Add the grade in italics
+        doc.setFontSize(18);
+        doc.setFont('Helvetica', 'italic');
+        doc.text(`Grade ${generatePDFData.grade}`, 0.5, 9.5);
+        
+        // Add the caption
+        doc.setFontSize(12);
+        doc.setFont('Helvetica', 'normal');
+        doc.text(doc.splitTextToSize(generatePDFData.caption, 7.5), 0.5, 10);
+        
+        // Add the QR code
+        doc.addImage(generatePDFData.qrCodeUrl, 'PNG', 7, 9, 1.5, 1.5);
+        
+        // Save the PDF
+        doc.save(`${generatePDFData.studentName}_Artwork.pdf`);
     });
 </script>
 
