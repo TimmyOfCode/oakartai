@@ -113,6 +113,7 @@
             font-family: monospace;
             text-align: left;
             word-wrap: break-word;
+            white-space: pre-wrap;
         }
         
         .loader {
@@ -352,11 +353,11 @@
         if (artist) {
             prompt += `, inspired by ${artist}`;
         }
-        prompt += `, highly detailed, professional, painting that would hang on a wall`;
+        prompt += `, a highly detailed and professional painting that will hang on the wall`;
         const encodedPrompt = encodeURIComponent(prompt);
         
-        // Display the full prompt
-        document.getElementById('prompt-display').textContent = `Prompt: ${prompt}`;
+        // Display the full prompt with seed number
+        document.getElementById('prompt-display').textContent = `Prompt: ${prompt}\nSeed Number: ${seed}`;
         
         // Create the image URL with higher resolution (2400x2400 pixels) and no logo
         const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400&nologo=true`;
