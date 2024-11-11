@@ -444,7 +444,7 @@
         doc.setFillColor(0, 0, 0);
         doc.rect(0, 0, 8.5, 11, 'F');
 
-        // Add the image
+        // Add the main image
         const imgData = generatePDFData.image.src;
         const imgWidth = 8; // 8 inches
         const imgHeight = 8; // 8 inches
@@ -467,11 +467,23 @@
         const captionLines = doc.splitTextToSize(generatePDFData.caption, 5.5);
         doc.text(captionLines, 0.5, 10);
 
-        // Add the QR code
-        doc.addImage(generatePDFData.qrCodeUrl, 'PNG', 6.5, 9, 1.5, 1.5);
-
-        // Save the PDF
-        doc.save(`${generatePDFData.studentName}_Artwork.pdf`);
+        // Fetch the QR code image and add it to the PDF
+        fetch(generatePDFData.qrCodeUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const qrDataUrl = reader.result;
+                    doc.addImage(qrDataUrl, 'PNG', 6.5, 9, 1.5, 1.5);
+                    // Save the PDF
+                    doc.save(`${generatePDFData.studentName}_Artwork.pdf`);
+                };
+                reader.readAsDataURL(blob);
+            })
+            .catch(error => {
+                console.error('Error fetching QR code image:', error);
+                alert('An error occurred while generating the PDF. Please try again.');
+            });
     });
 </script>
 
