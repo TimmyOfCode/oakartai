@@ -127,6 +127,28 @@
             text-align: center;
         }
         
+        /* Glowing Oak Tree Animation */
+        .oak-tree-loader {
+            margin: 2rem auto;
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg width="100" height="100" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path fill="%232c3e50" d="M32 2c-1.1 0-2 .9-2 2v10h-2c-3.9 0-7.6 1.5-10.4 4.4C16.5 21.2 15 24.9 15 28.8c0 3 1.1 5.8 3 8H16c-5.5 0-10 4.5-10 10v2c0 1.1.9 2 2 2h22v2h-5c-1.1 0-2 .9-2 2v2h14v-2c0-1.1-.9-2-2-2h-5v-2h22c1.1 0 2-.9 2-2v-2c0-5.5-4.5-10-10-10h-2c1.9-2.2 3-5 3-8 0-3.9-1.5-7.6-4.4-10.4C41.6 15.5 37.9 14 34 14h-2V4c0-1.1-.9-2-2-2zm-4 14h8c2.6 0 5 1 6.8 2.8S46 25.4 46 28c0 2.6-1 5-2.8 6.8S40.6 38 38 38H26c-2.6 0-5-1-6.8-2.8S16 30.6 16 28c0-2.6 1-5 2.8-6.8S23.4 16 26 16z"/></svg>');
+            background-size: contain;
+            animation: glow 2s infinite ease-in-out;
+        }
+        
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(44, 62, 80, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(44, 62, 80, 1);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(44, 62, 80, 0.5);
+            }
+        }
+        
         .qr-code {
             margin-top: 1rem;
         }
@@ -152,30 +174,6 @@
 
         .button-group a:last-child, .button-group button:last-child {
             margin-right: 0;
-        }
-
-        /* Progress Bar Styles */
-        .progress-bar {
-            width: 100%;
-            background-color: #ddd;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 1rem;
-            height: 20px;
-            display: none;
-        }
-
-        .progress-bar .progress {
-            width: 0%;
-            height: 100%;
-            background-color: #27ae60;
-            animation: progress-animation 2s infinite;
-        }
-
-        @keyframes progress-animation {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 0%; }
         }
     </style>
 </head>
@@ -299,10 +297,8 @@
     <div class="output" id="output-section" style="display: none;">
         <h2>Your AI-Generated Art</h2>
         <div class="loader" id="loader">
+            <div class="oak-tree-loader"></div>
             <p>Generating your art, please wait...</p>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
         </div>
         <div class="centered-image">
             <img id="generated-image" src="" alt="AI-Generated Art" style="display: none;">
@@ -320,9 +316,8 @@
     </div>
 </div>
 
-<!-- Include jsPDF and html2canvas libraries -->
+<!-- Include jsPDF library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <!-- JavaScript Code -->
 <script>
@@ -338,9 +333,6 @@
         document.getElementById('art-caption').textContent = '';
         document.getElementById('prompt-display').textContent = '';
         document.getElementById('qr-code').innerHTML = '';
-        
-        // Show the progress bar
-        document.querySelector('.progress-bar').style.display = 'block';
         
         // Get form values
         const studentName = document.getElementById('student-name').value;
@@ -383,9 +375,8 @@
                 imgElement.src = imageObjectURL;
                 imgElement.style.display = 'block';
                 
-                // Hide the loader and progress bar
+                // Hide the loader
                 document.getElementById('loader').style.display = 'none';
-                document.querySelector('.progress-bar').style.display = 'none';
                 
                 // Update the download link
                 const downloadLink = document.getElementById('download-btn');
@@ -403,7 +394,7 @@
                 if (additionalElements.trim() !== '') {
                     caption += `, ${additionalElements}`;
                 }
-                caption += `.`;
+                caption += '.';
                 document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
                 
                 // Generate QR code linking to the image on Pollinations.ai
@@ -428,7 +419,6 @@
             .catch(error => {
                 console.error('Error generating image:', error);
                 document.getElementById('loader').textContent = 'An error occurred. Please try again.';
-                document.querySelector('.progress-bar').style.display = 'none';
             });
     });
     
