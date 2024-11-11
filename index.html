@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Oak Tree Art Generator</title>
-    <meta name="description" content="AI-powered Oak Tree art generator for Oak Hall School AI Club">
+    <meta name="description" content="AI-powered Oak Tree art generator for Oak Hall School AI Prompt Engineering Enrichment Program">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Google Fonts for styling -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    
+
     <!-- Internal CSS -->
     <style>
         body {
@@ -19,7 +19,7 @@
             margin: 0;
             padding: 0;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 2rem auto;
@@ -28,29 +28,43 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
+
         h1, h2 {
             text-align: center;
             color: #2c3e50;
         }
-        
+
         .form-group {
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
         }
-        
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+
+        .form-group label {
+            width: 220px;
+            margin-bottom: 0;
         }
-        
-        select, input[type="text"], input[type="number"] {
-            width: 100%;
+
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            flex: 1;
             padding: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Centered Button */
+        .button-container {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
         button {
             background-color: #2c3e50;
             color: #ffffff;
@@ -59,30 +73,28 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            margin-top: 1rem;
-            width: 100%;
         }
-        
+
         button:hover {
             background-color: #1a252f;
         }
-        
+
         .output {
             margin-top: 2rem;
             text-align: center;
         }
-        
+
         .output img {
             max-width: 100%;
             border-radius: 10px;
             margin-top: 1rem;
         }
-        
+
         .caption {
             margin-top: 1rem;
             font-style: italic;
         }
-        
+
         .download-btn {
             display: inline-block;
             margin-top: 1rem;
@@ -91,12 +103,13 @@
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
+            margin-right: 1rem;
         }
-        
+
         .download-btn:hover {
             background-color: #1e8449;
         }
-        
+
         .prompt-display {
             background-color: #ecf0f1;
             padding: 1rem;
@@ -104,11 +117,63 @@
             margin-top: 1rem;
             font-family: monospace;
             text-align: left;
+            word-wrap: break-word;
+            white-space: pre-wrap;
         }
-        
+
         .loader {
             margin-top: 1rem;
             display: none;
+            text-align: center;
+        }
+
+        /* Glowing Oak Tree Animation */
+        .oak-tree-loader {
+            margin: 2rem auto;
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20460%20460%22%3E%3Cg%3E%3Crect%20x=%22190%22%20y=%22329.565%22%20fill=%22%23A78966%22%20width=%2240%22%20height=%22130.435%22/%3E%3Crect%20x=%22150%22%20y=%22329.565%22%20fill=%22%23B39A7C%22%20width=%2240%22%20height=%22130.435%22/%3E%3Crect%20x=%22230%22%20y=%22329.565%22%20fill=%22%23B39A7C%22%20width=%2240%22%20height=%22130.435%22/%3E%3Crect%20x=%22270%22%20y=%22329.565%22%20fill=%22%23A78966%22%20width=%2240%22%20height=%22130.435%22/%3E%3Cpath%20fill=%22%23317F46%22%20d=%22M380.483,105.528C358.2,43.98,299.241,0,230,0v329.565h115.217c63.391,0,114.783-51.392,114.783-114.783C460,163.696,426.619,120.41,380.483,105.528z%22/%3E%3Cpath%20fill=%22%233FA45A%22%20d=%22M230,329.565V0C160.759,0,101.8,43.98,79.517,105.528C33.381,120.41,0,163.696,0,214.783c0,63.391,51.391,114.783,114.783,114.783H230z%22/%3E%3C/g%3E%3C/svg%3E');
+            background-size: contain;
+            animation: glow 2s infinite ease-in-out;
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(44, 62, 80, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(44, 62, 80, 1);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(44, 62, 80, 0.5);
+            }
+        }
+
+        .qr-code {
+            margin-top: 1rem;
+        }
+
+        .centered-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .button-group a, .button-group button {
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .button-group a:last-child, .button-group button:last-child {
+            margin-right: 0;
         }
     </style>
 </head>
@@ -116,20 +181,20 @@
 
 <div class="container">
     <h1>Oak Tree Art Generator</h1>
-    <h2>Oak Hall School AI Club</h2>
+    <h2>Oak Hall School AI Prompt Engineering Enrichment Program</h2>
     <form id="art-form">
         <!-- Student Name -->
         <div class="form-group">
             <label for="student-name">Student Name:</label>
             <input type="text" id="student-name" required>
         </div>
-        
+
         <!-- Grade -->
         <div class="form-group">
             <label for="grade">Grade (4-8):</label>
             <input type="number" id="grade" min="4" max="8" required>
         </div>
-        
+
         <!-- Oak Tree Type -->
         <div class="form-group">
             <label for="oak-type">Type of Oak Tree:</label>
@@ -142,126 +207,271 @@
                 <option value="oak tree on a hill">Oak Tree on a Hill</option>
             </select>
         </div>
-        
-        <!-- Art Style -->
+
+        <!-- Lighting -->
         <div class="form-group">
-            <label for="art-style">Art Style:</label>
-            <select id="art-style">
-                <option value="Impressionism">Impressionism</option>
-                <option value="Cubism">Cubism</option>
-                <option value="Surrealism">Surrealism</option>
-                <option value="Renaissance">Renaissance</option>
-                <option value="Abstract">Abstract</option>
-                <option value="Modern">Modern</option>
+            <label for="lighting">Lighting:</label>
+            <select id="lighting">
+                <option value="bathed in golden sunlight">Bathed in Golden Sunlight</option>
+                <option value="under a twilight sky">Under a Twilight Sky</option>
+                <option value="in a misty morning">In a Misty Morning</option>
+                <option value="illuminated by moonlight">Illuminated by Moonlight</option>
+                <option value="during sunset">During Sunset</option>
+                <option value="with dramatic shadows">With Dramatic Shadows</option>
             </select>
         </div>
-        
+
+        <!-- Composition and Perspective -->
+        <div class="form-group">
+            <label for="composition">Composition and Perspective:</label>
+            <select id="composition">
+                <option value="framed using the rule of thirds">Using the Rule of Thirds</option>
+                <option value="from a low-angle perspective">From a Low-Angle Perspective</option>
+                <option value="from a bird's-eye view">From a Bird's-Eye View</option>
+                <option value="with a close-up focus on the trunk">Close-Up Focus on the Trunk</option>
+                <option value="with a wide-angle lens effect">With a Wide-Angle Lens Effect</option>
+                <option value="symmetrical composition">Symmetrical Composition</option>
+            </select>
+        </div>
+
+        <!-- Brushwork -->
+        <div class="form-group">
+            <label for="brushwork">Brushwork:</label>
+            <select id="brushwork">
+                <option value="smooth brushwork">Smooth Brushwork</option>
+                <option value="expressive brushwork">Expressive Brushwork</option>
+                <option value="impasto brushwork">Impasto Brushwork</option>
+                <option value="dry brush technique">Dry Brush Technique</option>
+                <option value="broken brushwork">Broken Brushwork</option>
+                <option value="scumbling">Scumbling</option>
+                <option value="glazing">Glazing</option>
+                <option value="sgraffito">Sgraffito</option>
+            </select>
+        </div>
+
         <!-- Medium -->
         <div class="form-group">
             <label for="medium">Medium:</label>
             <select id="medium">
                 <option value="oil painting on canvas">Oil Painting on Canvas</option>
                 <option value="watercolor on paper">Watercolor on Paper</option>
-                <option value="digital art">Digital Art</option>
+                <option value="sketch on heavy weight paper">Sketch on Heavy-weight Paper</option>
                 <option value="charcoal sketch">Charcoal Sketch</option>
                 <option value="acrylic painting">Acrylic Painting</option>
             </select>
         </div>
-        
-        <!-- Artist Inspiration -->
+
+        <!-- Dominant Color -->
         <div class="form-group">
-            <label for="artist">Inspired by Artist:</label>
-            <select id="artist">
-                <option value="Vincent van Gogh">Vincent van Gogh</option>
-                <option value="Pablo Picasso">Pablo Picasso</option>
-                <option value="Claude Monet">Claude Monet</option>
-                <option value="Salvador Dalí">Salvador Dalí</option>
-                <option value="Georgia O'Keeffe">Georgia O'Keeffe</option>
-                <option value="Leonardo da Vinci">Leonardo da Vinci</option>
+            <label for="dominant-color">Dominant Color (Optional):</label>
+            <select id="dominant-color">
+                <option value="">None</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="orange">Orange</option>
+                <option value="purple">Purple</option>
             </select>
         </div>
-        
+
+        <!-- Additional Elements -->
+        <div class="form-group">
+            <label for="additional-elements">Additional Elements (Optional):</label>
+            <textarea id="additional-elements" rows="3" placeholder="E.g., with leaves gently falling, surrounded by a serene landscape"></textarea>
+        </div>
+
         <!-- Seed Number -->
         <div class="form-group">
             <label for="seed">Seed Number (Optional for consistent outputs):</label>
             <input type="number" id="seed">
         </div>
-        
+
         <!-- Generate Button -->
-        <button type="submit">Generate Art</button>
+        <div class="button-container">
+            <button type="submit">Generate Art</button>
+        </div>
     </form>
-    
+
     <!-- Output Section -->
     <div class="output" id="output-section" style="display: none;">
         <h2>Your AI-Generated Art</h2>
-        <div class="loader" id="loader">Generating your art, please wait...</div>
-        <img id="generated-image" src="" alt="AI-Generated Art">
+        <div class="loader" id="loader">
+            <div class="oak-tree-loader"></div>
+            <p>Generating your art, please wait...</p>
+        </div>
+        <div class="centered-image">
+            <img id="generated-image" src="" alt="AI-Generated Art" style="display: none;">
+        </div>
         <p class="caption" id="art-caption"></p>
-        <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
+        <div class="qr-code" id="qr-code"></div>
+
+        <!-- Button Group -->
+        <div class="button-group">
+            <a href="#" id="download-btn" class="download-btn" download>Download Image</a>
+            <button id="download-pdf-btn" class="download-btn">Download Gallery PDF</button>
+        </div>
+
         <div class="prompt-display" id="prompt-display"></div>
     </div>
 </div>
+
+<!-- Include jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- JavaScript Code -->
 <script>
     document.getElementById('art-form').addEventListener('submit', function(event) {
         event.preventDefault();
-        
+
         // Show the output section and loader
         document.getElementById('output-section').style.display = 'block';
         document.getElementById('loader').style.display = 'block';
         document.getElementById('generated-image').style.display = 'none';
         document.getElementById('download-btn').style.display = 'none';
+        document.getElementById('download-pdf-btn').style.display = 'none';
         document.getElementById('art-caption').textContent = '';
         document.getElementById('prompt-display').textContent = '';
-        
+        document.getElementById('qr-code').innerHTML = '';
+
         // Get form values
         const studentName = document.getElementById('student-name').value;
         const grade = document.getElementById('grade').value;
         const oakType = document.getElementById('oak-type').value;
-        const artStyle = document.getElementById('art-style').value;
+        const lighting = document.getElementById('lighting').value;
+        const composition = document.getElementById('composition').value;
+        const brushwork = document.getElementById('brushwork').value;
         const medium = document.getElementById('medium').value;
-        const artist = document.getElementById('artist').value;
+        const dominantColor = document.getElementById('dominant-color').value;
+        const additionalElements = document.getElementById('additional-elements').value;
         const seedInput = document.getElementById('seed').value;
         const seed = seedInput ? seedInput : Math.floor(Math.random() * 1e9);
-        
+
         // Construct the prompt
-        const prompt = `${oakType}, in the style of ${artStyle}, ${medium}, inspired by ${artist}, highly detailed, professional, art that would hang on a wall`;
+        let prompt = `${oakType}, ${lighting}, ${composition}, ${brushwork}, ${medium}`;
+        if (dominantColor) {
+            prompt += `, dominant color is ${dominantColor}`;
+        }
+        if (additionalElements.trim() !== '') {
+            prompt += `, ${additionalElements}`;
+        }
+        prompt += `, a highly detailed and professional painting`;
         const encodedPrompt = encodeURIComponent(prompt);
-        
-        // Display the full prompt
-        document.getElementById('prompt-display').textContent = `Prompt: ${prompt}`;
-        
-        // Create the image URL
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=512&height=512`;
-        
+
+        // Display the full prompt with seed number
+        document.getElementById('prompt-display').textContent = `Prompt: ${prompt}\nSeed Number: ${seed}`;
+
+        // Create the image URL with higher resolution (2400x2400 pixels) and no logo
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400&nologo=true`;
+
         // Fetch the image
         fetch(imageUrl)
             .then(response => response.blob())
             .then(blob => {
                 const imageObjectURL = URL.createObjectURL(blob);
-                
+
                 // Display the image
                 const imgElement = document.getElementById('generated-image');
                 imgElement.src = imageObjectURL;
                 imgElement.style.display = 'block';
-                
+
                 // Hide the loader
                 document.getElementById('loader').style.display = 'none';
-                
+
                 // Update the download link
                 const downloadLink = document.getElementById('download-btn');
                 downloadLink.href = imageObjectURL;
                 downloadLink.style.display = 'inline-block';
-                
+
+                // Show the PDF download button
+                document.getElementById('download-pdf-btn').style.display = 'inline-block';
+
                 // Create the caption
-                const caption = `${studentName}, Grade ${grade}: AI-generated art of ${oakType}, ${medium}, in ${artStyle} style inspired by ${artist}.`;
-                document.getElementById('art-caption').textContent = caption;
+                let caption = `AI-generated art of ${oakType}, ${medium}, ${lighting}, ${composition}, ${brushwork}`;
+                if (dominantColor) {
+                    caption += `, dominant color is ${dominantColor}`;
+                }
+                if (additionalElements.trim() !== '') {
+                    caption += `, ${additionalElements}`;
+                }
+                caption += '.';
+                document.getElementById('art-caption').textContent = `${studentName}, Grade ${grade}: ${caption}`;
+
+                // Generate QR code linking to the image on Pollinations.ai
+                const pollinationsLink = `https://image.pollinations.ai/prompt/${encodedPrompt}?seed=${seed}&width=2400&height=2400&nologo=true`;
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pollinationsLink)}`;
+                const qrCodeImg = document.createElement('img');
+                qrCodeImg.src = qrCodeUrl;
+                qrCodeImg.alt = 'QR Code';
+                document.getElementById('qr-code').appendChild(qrCodeImg);
+
+                // Store data for PDF generation
+                imgElement.onload = function() {
+                    generatePDFData = {
+                        image: imgElement,
+                        studentName: studentName,
+                        grade: grade,
+                        caption: caption,
+                        qrCodeUrl: qrCodeUrl
+                    };
+                };
             })
             .catch(error => {
                 console.error('Error generating image:', error);
                 document.getElementById('loader').textContent = 'An error occurred. Please try again.';
             });
+    });
+
+    // PDF Generation Functionality
+    let generatePDFData = null;
+
+    document.getElementById('download-pdf-btn').addEventListener('click', function() {
+        if (!generatePDFData) {
+            alert('Please generate an image first.');
+            return;
+        }
+
+        // Create a new jsPDF instance
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'in',
+            format: [8.5, 11],
+            compress: true
+        });
+
+        // Set background color to black
+        doc.setFillColor(0, 0, 0);
+        doc.rect(0, 0, 8.5, 11, 'F');
+
+        // Add the image
+        const imgData = generatePDFData.image.src;
+        const imgWidth = 8; // 8 inches
+        const imgHeight = 8; // 8 inches
+        doc.addImage(imgData, 'JPEG', 0.25, 0.5, imgWidth, imgHeight);
+
+        // Add the student's name
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont('Helvetica', 'bold');
+        doc.text(generatePDFData.studentName, 0.5, 9);
+
+        // Add the grade in italics
+        doc.setFontSize(18);
+        doc.setFont('Helvetica', 'italic');
+        doc.text(`Grade ${generatePDFData.grade}`, 0.5, 9.5);
+
+        // Add the caption
+        doc.setFontSize(12);
+        doc.setFont('Helvetica', 'normal');
+        const captionLines = doc.splitTextToSize(generatePDFData.caption, 5.5);
+        doc.text(captionLines, 0.5, 10);
+
+        // Add the QR code
+        doc.addImage(generatePDFData.qrCodeUrl, 'PNG', 6.5, 9, 1.5, 1.5);
+
+        // Save the PDF
+        doc.save(`${generatePDFData.studentName}_Artwork.pdf`);
     });
 </script>
 
